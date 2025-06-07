@@ -11,6 +11,7 @@ app.use(express.json());
 
 app.post("/signup",async (req,res)=>{
     //Creating a new instance of the user models
+    //Creating a new instance of the user models
     const user = new User(req.body)
    
     
@@ -23,6 +24,35 @@ app.post("/signup",async (req,res)=>{
 
   
 });
+
+
+//Get user by email
+app.get("/user",async (req,res)=>{
+    const userEmail = req.body.emailId;
+
+    try{
+        const user = await User.find({emailId: userEmail });
+        if(user.length===0){
+            res.status(404).send("user not found");
+        } else {
+        res.send(user);
+    }
+    } catch(err){
+        res.status(400).send("Something went wrong");
+    }
+});
+
+//Feed API - Get /feed -get all the user from the database
+app.get("/feed", async (req,res)=>{
+    try{
+      const user = await User.find({});
+      res.send(user);
+    }
+    catch (err){
+     res.status(400).send("Something went wrong");
+    }
+})
+
 
 
 connectDB()
